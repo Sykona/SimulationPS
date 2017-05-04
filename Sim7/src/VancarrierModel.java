@@ -259,6 +259,8 @@ public class VancarrierModel extends Model implements Parameterizable {
 
 		// stop all threads still alive and close all output files
 		experiment.finish();
+		
+		System.out.println(finished);
 	}
 
 	/** 
