@@ -1,3 +1,4 @@
+package singleQueue;
 import co.paralleluniverse.fibers.SuspendExecution;
 import desmoj.core.simulator.*;
 
@@ -14,7 +15,7 @@ public class CustomerArrivalEvent extends Event<Customer>{
 	@Override
 	public void eventRoutine(Customer customer) throws SuspendExecution {
 		
-		model.customerQueue.insert(customer);
+		//model.customerQueue.insert(customer);
 		sendTraceNote("Lenght of Customer-Queue: " + model.customerQueue.length());
 		
 		if (!model.freeVendingMachineQueue.isEmpty()) {
@@ -25,14 +26,15 @@ public class CustomerArrivalEvent extends Event<Customer>{
 
 			model.occupiedVendingMachineQueue.insert(vendingMachine);
 			
-			model.customerQueue.remove(customer);
+			//model.customerQueue.remove(customer);
 			
 			CustomerFinishedEvent customerFinished = new CustomerFinishedEvent(model, "Customer Finished", true);
 			
 			customerFinished.schedule(customer, new TimeSpan(model.getCustomerDuration()));
+		}		
+		else {
+			model.customerQueue.insert(customer);
 		}
-		
-		
 		
 	}
 

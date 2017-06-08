@@ -1,3 +1,4 @@
+package singleQueue;
 import desmoj.core.simulator.*;
 import desmoj.core.dist.*;
 
@@ -43,17 +44,20 @@ public class VendingMachineModel extends Model{
 	@Override
 	public void init() {
 		customerArrivalTime = new ContDistExponential(this, "ArrivalTimeInterval", 3.0, true, true);
+		customerArrivalTime.setSeed(9829105);
 		customerArrivalTime.setNonNegative(true);
 		
 		customerDuration = new ContDistUniform(this, "CustomerDurations", 0.5, 10.0, true, true);
+		customerDuration.setSeed(68994544);
 		
 		customerQueue = new Queue<Customer>(this, "Customer-Queue", true, true);
 		
 		freeVendingMachineQueue = new Queue<VendingMachine>(this, "FreeVendingMachine-Queue", true, true);
 		
 		VendingMachine vendingMachine;
+		int machines = 2;
 		
-		for(int i=0; i<1; i++){
+		for(int i=0; i<machines; i++){
 			vendingMachine = new VendingMachine(this, "VendingMachine", true);
 			freeVendingMachineQueue.insert(vendingMachine);
 		}
@@ -63,7 +67,7 @@ public class VendingMachineModel extends Model{
 	
 	public static void main(String[] args) {
 		
-		Experiment vendingMachineExperiment = new Experiment("VendingMachine-Experiment");
+		Experiment vendingMachineExperiment = new Experiment("VendingMachine-Experiment-singleQueue");
 	
 		VendingMachineModel vendingModel = new VendingMachineModel(null, "VendingMachine-Model", true, true);
 	

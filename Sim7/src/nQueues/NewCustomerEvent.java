@@ -1,7 +1,8 @@
+package nQueues;
 import co.paralleluniverse.fibers.SuspendExecution;
 import desmoj.core.simulator.*;
 
-public class NewCustomerEvent extends ExternalEvent{
+public class NewCustomerEvent extends ExternalEvent {
 	
 	private VendingMachineModel model;
 	

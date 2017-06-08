@@ -1,3 +1,4 @@
+package singleQueue;
 import desmoj.core.simulator.*;
 
 public class VendingMachine extends Entity{

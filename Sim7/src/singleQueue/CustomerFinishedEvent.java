@@ -1,3 +1,4 @@
+package singleQueue;
 
 import co.paralleluniverse.fibers.SuspendExecution;
 import desmoj.core.simulator.*;

@@ -1,3 +1,4 @@
+package nQueues;
 import desmoj.core.simulator.*;
 
 public class Customer extends Entity {
