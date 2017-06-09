@@ -4,12 +4,12 @@ import desmoj.core.simulator.*;
 
 public class NewCustomerEvent extends ExternalEvent {
 	
-	private VendingMachineModel model;
+	private VendingMachineModelScenario1 model;
 	
 	public NewCustomerEvent (Model owner, String name, boolean showInTrace) {
 		super(owner, name, showInTrace);
 		
-		model = (VendingMachineModel) owner;
+		model = (VendingMachineModelScenario1) owner;
 	}
 	
 	@Override

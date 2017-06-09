@@ -5,25 +5,30 @@ import desmoj.core.simulator.*;
 
 public class CustomerFinishedEvent extends Event<Customer>{
 	
-	private VendingMachineModel model;
+	private VendingMachineModelScenario1 model;
 
 	public CustomerFinishedEvent(Model owner, String name, boolean showInTrace) {
 		super(owner, name, showInTrace);
 		
-		model = (VendingMachineModel) owner;
+		model = (VendingMachineModelScenario1) owner;
 	}
 
 	@Override
 	public void eventRoutine(Customer customer) throws SuspendExecution {
 		
+		model.customers.add(customer);
+		
+		// queue not empty, handle next customer
 		if(!model.customerQueue.isEmpty()) {
 			Customer nextCustomer = model.customerQueue.first();
 			model.customerQueue.remove(nextCustomer);
+			nextCustomer.setDequeue(model.presentTime());
 			
 			CustomerFinishedEvent customerFinished = new CustomerFinishedEvent(model, "Customer Finished", true);
 			
-			customerFinished.schedule(customer, new TimeSpan(model.getCustomerDuration()));
+			customerFinished.schedule(nextCustomer, new TimeSpan(model.getCustomerDuration()));
 		}
+		// queue empty, set machine to free
 		else {
 			VendingMachine vendingMachine = model.occupiedVendingMachineQueue.first();
 			model.occupiedVendingMachineQueue.remove(vendingMachine);

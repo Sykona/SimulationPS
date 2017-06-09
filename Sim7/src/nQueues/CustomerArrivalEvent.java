@@ -1,36 +1,55 @@
 package nQueues;
-import java.util.Random;
-
 import co.paralleluniverse.fibers.SuspendExecution;
 import desmoj.core.simulator.*;
+import singleQueue.Customer;
 
 public class CustomerArrivalEvent extends Event<Customer>{
 	
-	private VendingMachineModel model;
-	private Random r = new Random();
+	private VendingMachineModelScenario2 model;
 
 	public CustomerArrivalEvent(Model owner, String name, boolean showInTrace) {
 		super(owner, name, showInTrace);
 		
-		model = (VendingMachineModel) owner;
+		model = (VendingMachineModelScenario2) owner;
 	}
 
 	@Override
 	public void eventRoutine(Customer customer) throws SuspendExecution {
 		
-		int machines = model.vendingMachines.size();
-		int queue = r.nextInt(machines);
+		int numberOfMachines = model.vendingMachines.size();
+		int machine = 0;
+		int minQueueLength = model.vendingMachines.get(0).getCustomerQueue().size();
+		int state = model.vendingMachines.get(0).getState();
 		
-		VendingMachine toInsert = model.vendingMachines.get(queue);
+		// find the best queue and hence the machine
+		for(int i=1; i<numberOfMachines; i++){
+			int queueLength = model.vendingMachines.get(i).getCustomerQueue().size();
+			int tempState = model.vendingMachines.get(i).getState();
+			if(queueLength < minQueueLength){
+				machine = i;
+				minQueueLength = queueLength;
+				state = tempState;
+			} else if(queueLength == minQueueLength && tempState < state){
+				machine = i;
+				minQueueLength = queueLength;
+				state = tempState;
+			}
+		}
 		
+		// machine where the customer goes to
+		VendingMachine toInsert = model.vendingMachines.get(machine);
 		model.sendTraceNote("Customer: " + customer + " Goes to Machine: " + toInsert);
 		
-		if(!toInsert.getCustomerQueue().isEmpty() || toInsert.getState() == 1) {
-			toInsert.getCustomerQueue().insert(customer);
-			model.sendTraceNote("Current Queue on Machine: " + toInsert + " : " + toInsert.getCustomerQueue().size());
-		}
-		else if(toInsert.getState() == 0){
+		// insert customer
+		toInsert.getCustomerQueue().insert(customer);
+		customer.setEnqueue(model.presentTime());
+		
+		// machine is free
+		if(toInsert.getState() == 0){
 			toInsert.setState(1);
+			// remove customer
+			toInsert.getCustomerQueue().remove(customer);
+			customer.setDequeue(model.presentTime());
 			CustomerFinishedEvent customerFinished = new CustomerFinishedEvent(model, "CustomerFinished", true);
 			customerFinished.schedule(customer, toInsert, new TimeSpan(model.getCustomerDuration()));
 		}

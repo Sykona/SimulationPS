@@ -4,18 +4,20 @@ import desmoj.core.simulator.*;
 
 public class CustomerArrivalEvent extends Event<Customer>{
 	
-	private VendingMachineModel model;
+	private VendingMachineModelScenario1 model;
 
 	public CustomerArrivalEvent(Model owner, String name, boolean showInTrace) {
 		super(owner, name, showInTrace);
 		
-		model = (VendingMachineModel) owner;
+		model = (VendingMachineModelScenario1) owner;
 	}
 
 	@Override
 	public void eventRoutine(Customer customer) throws SuspendExecution {
 		
-		//model.customerQueue.insert(customer);
+		// insert customer
+		model.customerQueue.insert(customer);
+		customer.setEnqueue(model.presentTime());
 		sendTraceNote("Lenght of Customer-Queue: " + model.customerQueue.length());
 		
 		if (!model.freeVendingMachineQueue.isEmpty()) {
@@ -26,15 +28,13 @@ public class CustomerArrivalEvent extends Event<Customer>{
 
 			model.occupiedVendingMachineQueue.insert(vendingMachine);
 			
-			//model.customerQueue.remove(customer);
+			// remove customer
+			model.customerQueue.remove(customer);
+			customer.setDequeue(model.presentTime());
 			
 			CustomerFinishedEvent customerFinished = new CustomerFinishedEvent(model, "Customer Finished", true);
-			
 			customerFinished.schedule(customer, new TimeSpan(model.getCustomerDuration()));
 		}		
-		else {
-			model.customerQueue.insert(customer);
-		}
 		
 	}
 

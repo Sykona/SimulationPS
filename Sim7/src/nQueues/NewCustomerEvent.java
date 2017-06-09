@@ -1,15 +1,16 @@
 package nQueues;
 import co.paralleluniverse.fibers.SuspendExecution;
 import desmoj.core.simulator.*;
+import singleQueue.Customer;
 
 public class NewCustomerEvent extends ExternalEvent {
 	
-	private VendingMachineModel model;
+	private VendingMachineModelScenario2 model;
 	
 	public NewCustomerEvent (Model owner, String name, boolean showInTrace) {
 		super(owner, name, showInTrace);
 		
-		model = (VendingMachineModel) owner;
+		model = (VendingMachineModelScenario2) owner;
 	}
 	
 	@Override
