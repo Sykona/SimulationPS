@@ -33,12 +33,14 @@ public class Main {
 		ArrayList<Customer> scenario1;
 		ArrayList<Customer> scenario2;
 		ArrayList<Customer> scenario3;
+
+		int numOfMachines = 4;
 		
 		// scenario1
 		
 		Experiment vendingMachineExperiment = new Experiment("VendingMachine-Experiment-singleQueue");
 		Model vendingModel;
-		vendingModel = new VendingMachineModelScenario1(null, "VendingMachine-Model", true, true);
+		vendingModel = new VendingMachineModelScenario1(null, "VendingMachine-Model", true, true, numOfMachines);
 		vendingModel.connectToExperiment(vendingMachineExperiment);
 		
 		vendingMachineExperiment.tracePeriod(new TimeInstant(0.0), new TimeInstant(60));
@@ -55,7 +57,7 @@ public class Main {
 		
 		vendingMachineExperiment = new Experiment("VendingMachine-Experiment-nQueues");
 		
-		vendingModel = new VendingMachineModelScenario2(null, "VendingMachine-Model", true, true);
+		vendingModel = new VendingMachineModelScenario2(null, "VendingMachine-Model", true, true, numOfMachines);
 		vendingModel.connectToExperiment(vendingMachineExperiment);
 		
 		vendingMachineExperiment.tracePeriod(new TimeInstant(0.0), new TimeInstant(60));
@@ -71,7 +73,7 @@ public class Main {
 		// scenario 3
 		
 		vendingMachineExperiment = new Experiment("VendingMachine-Experiment-switchingQueue");
-		vendingModel = new VendingMachineModelScenario3(null, "VendingMachine-Model", true, true);
+		vendingModel = new VendingMachineModelScenario3(null, "VendingMachine-Model", true, true, numOfMachines);
 		vendingModel.connectToExperiment(vendingMachineExperiment);
 		
 		vendingMachineExperiment.tracePeriod(new TimeInstant(0.0), new TimeInstant(60));
@@ -167,7 +169,7 @@ public class Main {
         renderer.setSeriesItemLabelsVisible(2, true);
 
        
-		File barChart = new File("Output.png");
+		File barChart = new File("Output" + numOfMachines + ".png");
 		try {
 			ChartUtilities.saveChartAsPNG(barChart, chart, 640, 480);
 		} catch (IOException e) {

@@ -25,10 +25,14 @@ public class VendingMachineModelScenario2 extends Model{
 	
 	// list of customers for plotting data
 	protected ArrayList<Customer> customers;
+
+	// number of vending machines
+	protected int numOfMachines;
 	
 
-	public VendingMachineModelScenario2(Model owner, String name, boolean showInReport, boolean showInTrace) {
+	public VendingMachineModelScenario2(Model owner, String name, boolean showInReport, boolean showInTrace, int numOfMachines) {
 		super(owner, name, showInReport, showInTrace);
+		this.numOfMachines = numOfMachines;
 	}
 
 	@Override
@@ -44,7 +48,7 @@ public class VendingMachineModelScenario2 extends Model{
 
 	@Override
 	public void init() {
-		customerArrivalTime = new ContDistExponential(this, "ArrivalTimeInterval", 3, true, true);
+		customerArrivalTime = new ContDistExponential(this, "ArrivalTimeInterval", 2, true, true);
 		customerArrivalTime.setNonNegative(true);
 		customerArrivalTime.setSeed(9829104);
 		
@@ -54,9 +58,8 @@ public class VendingMachineModelScenario2 extends Model{
 		vendingMachines = new ArrayList<VendingMachine>();
 		
 		VendingMachine vendingMachine;
-		int machines = 2;
-		
-		for(int i=0; i<machines; i++){
+
+		for(int i=0; i<numOfMachines; i++){
 			vendingMachine = new VendingMachine(this, "VendingMachine", true, i);
 			vendingMachines.add(vendingMachine);
 		}
@@ -69,7 +72,7 @@ public class VendingMachineModelScenario2 extends Model{
 		
 		Experiment vendingMachineExperiment = new Experiment("VendingMachine-Experiment-nQueues");
 	
-		VendingMachineModelScenario2 vendingModel = new VendingMachineModelScenario2(null, "VendingMachine-Model", true, true);
+		VendingMachineModelScenario2 vendingModel = new VendingMachineModelScenario2(null, "VendingMachine-Model", true, true,2);
 	
 		vendingModel.connectToExperiment(vendingMachineExperiment);
 		
