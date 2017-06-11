@@ -35,12 +35,16 @@ public class Experiment2 {
 	static XYSeries series3AVG = new XYSeries("Scenario3AVG");
 	static XYSeries series3MAX = new XYSeries("Scenario3MAX");
 	
+	static long arrivalSeed = 0;
+	static long durationSeed = 0;
+	static long queueSeed = 0;
+	
 	public static void main(String[] args){
 		
 		XYSeriesCollection dataset1 = new XYSeriesCollection();
 		XYSeriesCollection dataset2 = new XYSeriesCollection();
 		
-		double lowerBoundCustomerDuration = 1;
+		double lowerBoundCustomerDuration = 0.5;
 		double upperBoundCustomerDuration = 10.0;
 		double arrivalTimeInterval = 2.8;
 		
@@ -97,8 +101,8 @@ public class Experiment2 {
         domainAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits(Locale.GERMANY));
         
        
-		File chart1File = new File("Output_Chart1_AVG.png");
-		File chart2File = new File("Output_Chart2_MAX.png");
+		File chart1File = new File("plots/Output_Chart1_AVG.png");
+		File chart2File = new File("plots/Output_Chart2_MAX.png");
 		try {
 			ChartUtilities.saveChartAsPNG(chart1File, chart1, 640, 480);
 			ChartUtilities.saveChartAsPNG(chart2File, chart2, 640, 480);
@@ -109,10 +113,7 @@ public class Experiment2 {
 	}
 	
 	private static void doExperiments(int numOfMachines, double lowerBoundCustomerDuration, double upperBoundCustomerDuration, double arrivalTimeInterval) {
-		
-		long arrivalSeed;
-		long durationSeed;
-		long queueSeed;
+
 		// scenario1
 		
 		Experiment vendingMachineExperiment = new Experiment("VendingMachine-Experiment-singleQueue");
@@ -122,6 +123,15 @@ public class Experiment2 {
 		
 		vendingMachineExperiment.tracePeriod(new TimeInstant(0.0), new TimeInstant(240));
 		vendingMachineExperiment.debugPeriod(new TimeInstant(0.0), new TimeInstant(240));
+		
+		if(arrivalSeed == 0)
+			arrivalSeed = ((VendingMachineModelScenario1) vendingModel).getArrivalSeed();
+		else
+			((VendingMachineModelScenario1) vendingModel).setArrivalSeed(arrivalSeed);
+		if(durationSeed == 0)
+			durationSeed = ((VendingMachineModelScenario1) vendingModel).getDurationSeed();
+		else
+			((VendingMachineModelScenario1) vendingModel).setDurationSeed(durationSeed);
 		 
 		vendingMachineExperiment.stop(new TimeInstant(240));
 		vendingMachineExperiment.start();
@@ -129,8 +139,6 @@ public class Experiment2 {
 		vendingMachineExperiment.finish();
 		
 		scenario1 = ((VendingMachineModelScenario1) vendingModel).getCustomerList();
-		arrivalSeed = ((VendingMachineModelScenario1) vendingModel).getArrivalSeed();
-		durationSeed = ((VendingMachineModelScenario1) vendingModel).getDurationSeed();
 		
 		// scenario 2
 		
@@ -144,6 +152,10 @@ public class Experiment2 {
 		
 		((VendingMachineModelScenario2) vendingModel).setArrivalSeed(arrivalSeed);
 		((VendingMachineModelScenario2) vendingModel).setDurationSeed(durationSeed);
+		if(queueSeed == 0)
+			queueSeed = ((VendingMachineModelScenario2) vendingModel).getQueueSeed();
+		else
+			((VendingMachineModelScenario2) vendingModel).setQueueSeed(queueSeed);
 		
 		vendingMachineExperiment.stop(new TimeInstant(240));
 		vendingMachineExperiment.start();
@@ -152,7 +164,6 @@ public class Experiment2 {
 		
 		scenario2 = ((VendingMachineModelScenario2) vendingModel).getCustomerList();
 		
-		queueSeed = ((VendingMachineModelScenario2) vendingModel).getQueueSeed();
 		
 		// scenario 3
 		
@@ -183,7 +194,6 @@ public class Experiment2 {
 		double scen1Max = 0.0;
 		double scen2Max = 0.0;
 		double scen3Max = 0.0;
-	
 		
 		for(int i=0; i<scenario1.size(); i++){
 			double duration;
@@ -203,7 +213,7 @@ public class Experiment2 {
 			if(i < scenario3.size()) {
 				duration = scenario3.get(i).getDuration();
 				scen3Avg += duration;
-				if(duration > scen3Max)
+				if(duration > scen3Max) 
 					scen3Max = duration;
 			}
 		}

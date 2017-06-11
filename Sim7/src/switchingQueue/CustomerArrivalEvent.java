@@ -6,6 +6,7 @@ import singleQueue.Customer;
 public class CustomerArrivalEvent extends Event<Customer>{
 	
 	private VendingMachineModelScenario3 model;
+	
 	private boolean random = true;
 
 	public CustomerArrivalEvent(Model owner, String name, boolean showInTrace) {
@@ -22,7 +23,7 @@ public class CustomerArrivalEvent extends Event<Customer>{
 		
 		if(random) {
 			// random machine
-			machine = model.getQueue();
+			machine = (int) model.getQueue();
 		}else {
 			// find the best queue and hence the machine
 			for(int i=1; i<numberOfMachines; i++){

@@ -23,63 +23,27 @@ import singleQueue.VendingMachineModelScenario1;
 import switchingQueue.VendingMachineModelScenario3;
 
 public class Experiment1 {
-
 	
 	static ArrayList<Customer> scenario1;
 	static ArrayList<Customer> scenario2;
 	static ArrayList<Customer> scenario3;
 	
+	static DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+	
+	// row keys...
+	static final String series1 = "Scenario 1";
+	static final String series2 = "Scenario 2";
+	static final String series3 = "Scenario 3";
+	
+	static long arrivalSeed = 0;
+	static long queueSeed = 0;
+	static long durationSeed = 0;
+	
+	static int numberOfMachines = 2;
+	
 	public static void main(String[] args){
-		
-		// row keys...
-		final String series1 = "Scenario 1";
-		final String series2 = "Scenario 2";
-		final String series3 = "Scenario 3";
-		
-		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		
-		int numberOfMachines = 2;
 
 		doExperiments(numberOfMachines, 0.5, 10.0, 3);
-		
-		double scen1Avg = 0.0;
-		double scen2Avg = 0.0;
-		double scen3Avg = 0.0;
-		
-		double scen1Max = 0.0;
-		double scen2Max = 0.0;
-		double scen3Max = 0.0;
-	
-		
-		for(int i=0; i<scenario1.size(); i++){
-			double duration;
-			// scenario1
-			duration = scenario1.get(i).getDuration();
-			scen1Avg += duration;
-			if(duration > scen1Max)
-				scen1Max = duration;
-			// scenario2
-			duration = scenario2.get(i).getDuration();
-			scen2Avg += duration;
-			if(duration > scen2Max)
-				scen2Max = duration;
-			// scenario3
-			duration = scenario3.get(i).getDuration();
-			scen3Avg += duration;
-			if(duration > scen3Max)
-				scen3Max = duration;
-		}
-		
-		scen1Avg /= scenario1.size();
-		scen2Avg /= scenario2.size();
-		scen3Avg /= scenario3.size();
-		
-		dataset.addValue(scen1Avg, series1, "AVG Duration" + numberOfMachines);
-		dataset.addValue(scen1Max, series1, "MAX Duration" + numberOfMachines);
-		dataset.addValue(scen2Avg, series2, "AVG Duration" + numberOfMachines);
-		dataset.addValue(scen2Max, series2, "MAX Duration" + numberOfMachines);
-		dataset.addValue(scen3Avg, series3, "AVG Duration" + numberOfMachines);
-		dataset.addValue(scen3Max, series3, "MAX Duration" + numberOfMachines);
 		
 		JFreeChart chart = ChartFactory.createBarChart(
 				"Customer Durations", 		// name
@@ -118,9 +82,9 @@ public class Experiment1 {
         renderer.setSeriesItemLabelsVisible(2, true);
 
        
-		File barChart = new File("Output" + numberOfMachines + ".png");
+		File barChart = new File("plots/Output" + numberOfMachines + ".png");
 		try {
-			ChartUtilities.saveChartAsPNG(barChart, chart, 2560, 1920);
+			ChartUtilities.saveChartAsPNG(barChart, chart, 640, 480);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -136,8 +100,17 @@ public class Experiment1 {
 		vendingModel = new VendingMachineModelScenario1(null, "VendingMachine-Model", true, true, numOfMachines, lowerBoundCustomerDuration, upperBoundCustomerDuration, arrivalTimeInterval);
 		vendingModel.connectToExperiment(vendingMachineExperiment);
 		
-		vendingMachineExperiment.tracePeriod(new TimeInstant(0.0), new TimeInstant(60));
-		vendingMachineExperiment.debugPeriod(new TimeInstant(0.0), new TimeInstant(60));
+		vendingMachineExperiment.tracePeriod(new TimeInstant(0.0), new TimeInstant(240));
+		vendingMachineExperiment.debugPeriod(new TimeInstant(0.0), new TimeInstant(240));
+		
+		if(arrivalSeed == 0)
+			arrivalSeed = ((VendingMachineModelScenario1) vendingModel).getArrivalSeed();
+		else
+			((VendingMachineModelScenario1) vendingModel).setArrivalSeed(arrivalSeed);
+		if(durationSeed == 0)
+			durationSeed = ((VendingMachineModelScenario1) vendingModel).getDurationSeed();
+		else
+			((VendingMachineModelScenario1) vendingModel).setDurationSeed(durationSeed);
 		 
 		vendingMachineExperiment.stop(new TimeInstant(240));
 		vendingMachineExperiment.start();
@@ -153,8 +126,15 @@ public class Experiment1 {
 		vendingModel = new VendingMachineModelScenario2(null, "VendingMachine-Model", true, true, numOfMachines, lowerBoundCustomerDuration, upperBoundCustomerDuration, arrivalTimeInterval);
 		vendingModel.connectToExperiment(vendingMachineExperiment);
 		
-		vendingMachineExperiment.tracePeriod(new TimeInstant(0.0), new TimeInstant(60));
-		vendingMachineExperiment.debugPeriod(new TimeInstant(0.0), new TimeInstant(60));
+		vendingMachineExperiment.tracePeriod(new TimeInstant(0.0), new TimeInstant(240));
+		vendingMachineExperiment.debugPeriod(new TimeInstant(0.0), new TimeInstant(240));
+		
+		((VendingMachineModelScenario2) vendingModel).setArrivalSeed(arrivalSeed);
+		((VendingMachineModelScenario2) vendingModel).setDurationSeed(durationSeed);
+		if(queueSeed == 0)
+			queueSeed = ((VendingMachineModelScenario2) vendingModel).getQueueSeed();
+		else
+			((VendingMachineModelScenario2) vendingModel).setQueueSeed(queueSeed);
 		
 		vendingMachineExperiment.stop(new TimeInstant(240));
 		vendingMachineExperiment.start();
@@ -163,14 +143,19 @@ public class Experiment1 {
 		
 		scenario2 = ((VendingMachineModelScenario2) vendingModel).getCustomerList();
 		
+		
 		// scenario 3
 		
 		vendingMachineExperiment = new Experiment("VendingMachine-Experiment-switchingQueue");
 		vendingModel = new VendingMachineModelScenario3(null, "VendingMachine-Model", true, true, numOfMachines, lowerBoundCustomerDuration, upperBoundCustomerDuration, arrivalTimeInterval);
 		vendingModel.connectToExperiment(vendingMachineExperiment);
 		
-		vendingMachineExperiment.tracePeriod(new TimeInstant(0.0), new TimeInstant(60));
-		vendingMachineExperiment.debugPeriod(new TimeInstant(0.0), new TimeInstant(60));
+		vendingMachineExperiment.tracePeriod(new TimeInstant(0.0), new TimeInstant(240));
+		vendingMachineExperiment.debugPeriod(new TimeInstant(0.0), new TimeInstant(240));
+		
+		((VendingMachineModelScenario3) vendingModel).setArrivalSeed(arrivalSeed);
+		((VendingMachineModelScenario3) vendingModel).setDurationSeed(durationSeed);
+		((VendingMachineModelScenario3) vendingModel).setQueueSeed(queueSeed);
 		
 		vendingMachineExperiment.stop(new TimeInstant(240));
 		vendingMachineExperiment.start();
@@ -178,5 +163,49 @@ public class Experiment1 {
 		vendingMachineExperiment.finish();
 		
 		scenario3 = ((VendingMachineModelScenario3) vendingModel).getCustomerList();
+		
+
+		double scen1Avg = 0.0;
+		double scen2Avg = 0.0;
+		double scen3Avg = 0.0;
+		
+		double scen1Max = 0.0;
+		double scen2Max = 0.0;
+		double scen3Max = 0.0;
+	
+		
+		for(int i=0; i<scenario1.size(); i++){
+			double duration;
+			// scenario1
+			duration = scenario1.get(i).getDuration();
+			scen1Avg += duration;
+			if(duration > scen1Max)
+				scen1Max = duration;
+			// scenario2
+			if(i < scenario2.size()) {
+				duration = scenario2.get(i).getDuration();
+				scen2Avg += duration;
+				if(duration > scen2Max)
+					scen2Max = duration;
+			}
+			// scenario3
+			if(i < scenario3.size()) {
+				duration = scenario3.get(i).getDuration();
+				scen3Avg += duration;
+				if(duration > scen3Max) 
+					scen3Max = duration;
+			}
+		}
+		
+		scen1Avg /= scenario1.size();
+		scen2Avg /= scenario2.size();
+		scen3Avg /= scenario3.size();
+		
+		dataset.addValue(scen1Avg, series1, "AVG Duration" + numberOfMachines);
+		dataset.addValue(scen1Max, series1, "MAX Duration" + numberOfMachines);
+		dataset.addValue(scen2Avg, series2, "AVG Duration" + numberOfMachines);
+		dataset.addValue(scen2Max, series2, "MAX Duration" + numberOfMachines);
+		dataset.addValue(scen3Avg, series3, "AVG Duration" + numberOfMachines);
+		dataset.addValue(scen3Max, series3, "MAX Duration" + numberOfMachines);
 	}
 }

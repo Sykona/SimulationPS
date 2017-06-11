@@ -22,8 +22,8 @@ public class VendingMachineModelScenario3 extends Model{
 	
 	// random generator for enqueuing customers
 	private ContDistUniform queue;
-	public int getQueue() {
-		return (int) Math.round(queue.sample());
+	public double getQueue() {
+		return queue.sample();
 	}
 	
 	// queue for free machines
@@ -67,7 +67,7 @@ public class VendingMachineModelScenario3 extends Model{
 		
 		customerDuration = new ContDistUniform(this, "CustomerDurations", lowerBoundCustomerDuration, upperBoundCustomerDuration, true, true);
 		
-		queue = new ContDistUniform(this, "Queue", 0.0, numOfMachines-1, true, true);
+		queue = new ContDistUniform(this, "Queue", 0.0, numOfMachines, true, true);
 		
 		vendingMachines = new ArrayList<VendingMachine>();
 		
