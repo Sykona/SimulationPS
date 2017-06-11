@@ -43,7 +43,7 @@ public class Experiment1 {
 	
 	public static void main(String[] args){
 
-		doExperiments(numberOfMachines, 0.5, 10.0, 3);
+		doExperiments(numberOfMachines, 0.5, 10.0, 2.8);
 		
 		JFreeChart chart = ChartFactory.createBarChart(
 				"Customer Durations", 		// name

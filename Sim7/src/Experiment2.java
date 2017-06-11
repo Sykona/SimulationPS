@@ -1,3 +1,4 @@
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
@@ -88,6 +89,8 @@ public class Experiment2 {
         NumberAxis domainAxis = (NumberAxis) plot.getDomainAxis();
         domainAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits(Locale.GERMANY));
         
+        plot.getRenderer().setSeriesStroke(2, new BasicStroke(3.0f));
+        
         plot = chart2.getXYPlot();
         plot.setBackgroundPaint(Color.lightGray);
         plot.setDomainGridlinePaint(Color.white);
@@ -100,6 +103,8 @@ public class Experiment2 {
         domainAxis = (NumberAxis) plot.getDomainAxis();
         domainAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits(Locale.GERMANY));
         
+        plot.getRenderer().setSeriesStroke(2, new BasicStroke(3.0f));
+     
        
 		File chart1File = new File("plots/Output_Chart1_AVG.png");
 		File chart2File = new File("plots/Output_Chart2_MAX.png");

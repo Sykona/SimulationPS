@@ -7,7 +7,7 @@ public class CustomerArrivalEvent extends Event<Customer>{
 	
 	private VendingMachineModelScenario2 model;
 	
-	private boolean random = true;
+	private boolean random = false;
 
 	public CustomerArrivalEvent(Model owner, String name, boolean showInTrace) {
 		super(owner, name, showInTrace);
@@ -25,10 +25,10 @@ public class CustomerArrivalEvent extends Event<Customer>{
 			// random machine
 			machine = (int) model.getQueue();
 		}else {
+			int minQueueLength = model.vendingMachines.get(0).getCustomerQueue().size();
+			int state = model.vendingMachines.get(0).getState();
 			// find the best queue and hence the machine
 			for(int i=1; i<numberOfMachines; i++){
-				int minQueueLength = model.vendingMachines.get(0).getCustomerQueue().size();
-				int state = model.vendingMachines.get(0).getState();
 				int queueLength = model.vendingMachines.get(i).getCustomerQueue().size();
 				int tempState = model.vendingMachines.get(i).getState();
 				if(queueLength < minQueueLength){
