@@ -20,7 +20,10 @@ import nQueues.VendingMachineModelScenario2;
 import singleQueue.Customer;
 import singleQueue.VendingMachineModelScenario1;
 import switchingQueue.VendingMachineModelScenario3;
-
+/**
+ * Multiple run experiment for the 3 scenarios with varying number of machine
+ * @author Oliver Remy, Max Göttl, Dennis Strähhuber
+ */
 public class Experiment2 {
 	
 	static ArrayList<Customer> scenario1;
