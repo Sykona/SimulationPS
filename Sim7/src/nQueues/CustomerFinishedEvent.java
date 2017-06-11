@@ -20,13 +20,13 @@ public class CustomerFinishedEvent extends EventOf2Entities<Customer, VendingMac
 		Queue<Customer> customerQueue = vendingMachine.getCustomerQueue();
 		
 		model.sendTraceNote("Customer: " + customer + " finished.");
-		model.customers.add(customer);
 		
 		// queue not empty, handle next customer
 		if(!customerQueue.isEmpty()) {
 			Customer nextCustomer = customerQueue.first();
 			customerQueue.remove(nextCustomer);
 			nextCustomer.setDequeue(model.presentTime());
+			model.customers.add(nextCustomer);
 			
 			CustomerFinishedEvent customerFinished = new CustomerFinishedEvent(model, "CustomerFinished", true);
 			

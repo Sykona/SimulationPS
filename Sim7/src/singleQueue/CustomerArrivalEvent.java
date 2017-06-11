@@ -31,6 +31,7 @@ public class CustomerArrivalEvent extends Event<Customer>{
 			// remove customer
 			model.customerQueue.remove(customer);
 			customer.setDequeue(model.presentTime());
+			model.customers.add(customer);
 			
 			CustomerFinishedEvent customerFinished = new CustomerFinishedEvent(model, "Customer Finished", true);
 			customerFinished.schedule(customer, new TimeSpan(model.getCustomerDuration()));

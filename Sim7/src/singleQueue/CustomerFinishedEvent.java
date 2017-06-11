@@ -16,13 +16,12 @@ public class CustomerFinishedEvent extends Event<Customer>{
 	@Override
 	public void eventRoutine(Customer customer) throws SuspendExecution {
 		
-		model.customers.add(customer);
-		
 		// queue not empty, handle next customer
 		if(!model.customerQueue.isEmpty()) {
 			Customer nextCustomer = model.customerQueue.first();
 			model.customerQueue.remove(nextCustomer);
 			nextCustomer.setDequeue(model.presentTime());
+			model.customers.add(nextCustomer);
 			
 			CustomerFinishedEvent customerFinished = new CustomerFinishedEvent(model, "Customer Finished", true);
 			

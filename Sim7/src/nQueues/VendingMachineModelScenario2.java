@@ -3,6 +3,7 @@ import desmoj.core.simulator.*;
 import singleQueue.Customer;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import desmoj.core.dist.*;
 
@@ -20,6 +21,12 @@ public class VendingMachineModelScenario2 extends Model{
 		return customerDuration.sample();
 	}
 	
+	// random generator for enqueuing customers
+	private ContDistUniform queue;
+	public int getQueue() {
+		return (int) Math.round(queue.sample());
+	}
+	
 	// queue for free machines
 	protected ArrayList<VendingMachine> vendingMachines;
 	
@@ -29,10 +36,18 @@ public class VendingMachineModelScenario2 extends Model{
 	// number of vending machines
 	protected int numOfMachines;
 	
+	// interval values
+	protected double lowerBoundCustomerDuration;
+	protected double upperBoundCustomerDuration;
+	protected double arrivalTimeInterval;
+	
 
-	public VendingMachineModelScenario2(Model owner, String name, boolean showInReport, boolean showInTrace, int numOfMachines) {
+	public VendingMachineModelScenario2(Model owner, String name, boolean showInReport, boolean showInTrace, int numOfMachines, double lowerBoundCustomerDuration, double upperBoundCustomerDuration, double arrivalTimeInterval) {
 		super(owner, name, showInReport, showInTrace);
 		this.numOfMachines = numOfMachines;
+		this.lowerBoundCustomerDuration = lowerBoundCustomerDuration;
+		this.upperBoundCustomerDuration = upperBoundCustomerDuration;
+		this.arrivalTimeInterval = arrivalTimeInterval;
 	}
 
 	@Override
@@ -48,12 +63,17 @@ public class VendingMachineModelScenario2 extends Model{
 
 	@Override
 	public void init() {
-		customerArrivalTime = new ContDistExponential(this, "ArrivalTimeInterval", 2, true, true);
+		customerArrivalTime = new ContDistExponential(this, "ArrivalTimeInterval", arrivalTimeInterval, true, true);
 		customerArrivalTime.setNonNegative(true);
-		customerArrivalTime.setSeed(9829104);
+		//customerArrivalTime.setSeed(9829104);
 		
-		customerDuration = new ContDistUniform(this, "CustomerDurations", 0.5, 5.0, true, true);
-		customerDuration.setSeed(68994545);
+		customerDuration = new ContDistUniform(this, "CustomerDurations", lowerBoundCustomerDuration, upperBoundCustomerDuration, true, true);
+		//customerDuration.setSeed(68994545);
+		
+		Random r = new Random();
+		
+		queue = new ContDistUniform(this, "Queue", 0.0, numOfMachines-1, true, true);
+		queue.reset(Math.abs(r.nextLong()));
 		
 		vendingMachines = new ArrayList<VendingMachine>();
 		
@@ -72,7 +92,7 @@ public class VendingMachineModelScenario2 extends Model{
 		
 		Experiment vendingMachineExperiment = new Experiment("VendingMachine-Experiment-nQueues");
 	
-		VendingMachineModelScenario2 vendingModel = new VendingMachineModelScenario2(null, "VendingMachine-Model", true, true,2);
+		VendingMachineModelScenario2 vendingModel = new VendingMachineModelScenario2(null, "VendingMachine-Model", true, true, 2, 0.5, 10.0, 3);
 	
 		vendingModel.connectToExperiment(vendingMachineExperiment);
 		
@@ -93,5 +113,27 @@ public class VendingMachineModelScenario2 extends Model{
 		return customers;
 	}
 
-
+	public long getArrivalSeed() {
+		return customerArrivalTime.getInitialSeed();
+	}
+	
+	public long getDurationSeed() {
+		return customerDuration.getInitialSeed();
+	}
+	
+	public long getQueueSeed() {
+		return queue.getInitialSeed();
+	}
+	
+	public void setArrivalSeed(long seed) {
+		customerArrivalTime.reset(seed);
+	}
+	
+	public void setDurationSeed(long seed) {
+		customerDuration.reset(seed);
+	}
+	
+	public void setQueueSeed(long seed) {
+		queue.reset(seed);
+	}
 }

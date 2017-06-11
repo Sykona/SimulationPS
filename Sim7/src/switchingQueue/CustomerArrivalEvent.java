@@ -6,6 +6,7 @@ import singleQueue.Customer;
 public class CustomerArrivalEvent extends Event<Customer>{
 	
 	private VendingMachineModelScenario3 model;
+	private boolean random = true;
 
 	public CustomerArrivalEvent(Model owner, String name, boolean showInTrace) {
 		super(owner, name, showInTrace);
@@ -18,21 +19,26 @@ public class CustomerArrivalEvent extends Event<Customer>{
 		
 		int numberOfMachines = model.vendingMachines.size();
 		int machine = 0;
-		int minQueueLength = model.vendingMachines.get(0).getCustomerQueue().size();
-		int state = model.vendingMachines.get(0).getState();
 		
-		// find the best queue and hence the machine
-		for(int i=1; i<numberOfMachines; i++){
-			int queueLength = model.vendingMachines.get(i).getCustomerQueue().size();
-			int tempState = model.vendingMachines.get(i).getState();
-			if(queueLength < minQueueLength){
-				machine = i;
-				minQueueLength = queueLength;
-				state = tempState;
-			} else if(queueLength == minQueueLength && tempState < state){
-				machine = i;
-				minQueueLength = queueLength;
-				state = tempState;
+		if(random) {
+			// random machine
+			machine = model.getQueue();
+		}else {
+			// find the best queue and hence the machine
+			for(int i=1; i<numberOfMachines; i++){
+				int minQueueLength = model.vendingMachines.get(0).getCustomerQueue().size();
+				int state = model.vendingMachines.get(0).getState();
+				int queueLength = model.vendingMachines.get(i).getCustomerQueue().size();
+				int tempState = model.vendingMachines.get(i).getState();
+				if(queueLength < minQueueLength){
+					machine = i;
+					minQueueLength = queueLength;
+					state = tempState;
+				} else if(queueLength == minQueueLength && tempState < state){
+					machine = i;
+					minQueueLength = queueLength;
+					state = tempState;
+				}
 			}
 		}
 		
@@ -50,6 +56,8 @@ public class CustomerArrivalEvent extends Event<Customer>{
 			// remove customer
 			toInsert.getCustomerQueue().remove(customer);
 			customer.setDequeue(model.presentTime());
+			model.customers.add(customer);
+			
 			CustomerFinishedEvent customerFinished = new CustomerFinishedEvent(model, "CustomerFinished", true);
 			customerFinished.schedule(customer, toInsert, new TimeSpan(model.getCustomerDuration()));
 		}
