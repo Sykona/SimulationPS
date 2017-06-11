@@ -1,6 +1,10 @@
 package singleQueue;
 import desmoj.core.simulator.*;
 
+/**
+ * Customer entity for all 3 scenarios
+ * @author Oliver Remy, Max Göttl, Dennis Strähhuber
+ */
 public class Customer extends Entity {
 	
 	// enqueue and dequeue of the waiting queue

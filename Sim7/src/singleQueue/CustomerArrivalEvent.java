@@ -2,6 +2,10 @@ package singleQueue;
 import co.paralleluniverse.fibers.SuspendExecution;
 import desmoj.core.simulator.*;
 
+/**
+ * Customer arrival event for scenario 1
+ * @author Oliver Remy, Max Göttl, Dennis Strähhuber
+ */
 public class CustomerArrivalEvent extends Event<Customer>{
 	
 	private VendingMachineModelScenario1 model;

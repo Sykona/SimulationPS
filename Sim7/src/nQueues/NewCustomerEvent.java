@@ -2,7 +2,10 @@ package nQueues;
 import co.paralleluniverse.fibers.SuspendExecution;
 import desmoj.core.simulator.*;
 import singleQueue.Customer;
-
+/**
+ * New customer event for scenario 2
+ * @author Oliver Remy, Max Göttl, Dennis Strähhuber
+ */
 public class NewCustomerEvent extends ExternalEvent {
 	
 	private VendingMachineModelScenario2 model;

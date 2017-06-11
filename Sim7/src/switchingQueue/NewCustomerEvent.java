@@ -3,6 +3,10 @@ import co.paralleluniverse.fibers.SuspendExecution;
 import desmoj.core.simulator.*;
 import singleQueue.Customer;
 
+/**
+ * New customer event scenario 3
+ * @author Oliver Remy, Max Göttl, Dennis Strähhuber
+ */
 public class NewCustomerEvent extends ExternalEvent {
 	
 	private VendingMachineModelScenario3 model;

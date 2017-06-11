@@ -2,6 +2,10 @@ package switchingQueue;
 import desmoj.core.simulator.*;
 import singleQueue.Customer;
 
+/**
+ * Vending machine entity scenario 3
+ * @author Oliver Remy, Max Göttl, Dennis Strähhuber
+ */
 public class VendingMachine extends Entity{
 	
 	// Queue for waiting customers

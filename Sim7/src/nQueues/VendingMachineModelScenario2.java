@@ -7,6 +7,10 @@ import java.util.Random;
 
 import desmoj.core.dist.*;
 
+/**
+ * Vending machine model scenario 2
+ * @author Oliver Remy, Max Göttl, Dennis Strähhuber
+ */
 public class VendingMachineModelScenario2 extends Model{
 	
 	// random generator for customer arrivals

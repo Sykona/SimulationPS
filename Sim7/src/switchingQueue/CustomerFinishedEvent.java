@@ -3,6 +3,10 @@ package switchingQueue;
 import desmoj.core.simulator.*;
 import singleQueue.Customer;
 
+/**
+ * Customer finished event scenario 3
+ * @author Oliver Remy, Max Göttl, Dennis Strähhuber
+ */
 public class CustomerFinishedEvent extends EventOf2Entities<Customer, VendingMachine>{
 	
 	private VendingMachineModelScenario3 model;

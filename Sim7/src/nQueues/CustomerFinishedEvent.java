@@ -2,7 +2,10 @@ package nQueues;
 
 import desmoj.core.simulator.*;
 import singleQueue.Customer;
-
+/**
+ * Customer finished event for scenario 2
+ * @author Oliver Remy, Max Göttl, Dennis Strähhuber
+ */
 public class CustomerFinishedEvent extends EventOf2Entities<Customer, VendingMachine>{
 	
 	private VendingMachineModelScenario2 model;
