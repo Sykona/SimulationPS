@@ -10,7 +10,7 @@ public class CustomerArrivalEvent extends Event<Customer>{
 	
 	private VendingMachineModelScenario2 model;
 	
-	private boolean random = true;
+	private boolean random = false;
 
 	public CustomerArrivalEvent(Model owner, String name, boolean showInTrace) {
 		super(owner, name, showInTrace);
