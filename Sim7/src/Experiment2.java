@@ -43,6 +43,8 @@ public class Experiment2 {
 	static long durationSeed = 0;
 	static long queueSeed = 0;
 	
+	static boolean randomAssignement = true;
+	
 	public static void main(String[] args){
 		
 		XYSeriesCollection dataset1 = new XYSeriesCollection();
@@ -109,8 +111,8 @@ public class Experiment2 {
         plot.getRenderer().setSeriesStroke(2, new BasicStroke(3.0f));
      
        
-		File chart1File = new File("plots/Output_Chart1_AVG.png");
-		File chart2File = new File("plots/Output_Chart2_MAX.png");
+		File chart1File = new File("plots/Output_Chart1_AVG_random_" + randomAssignement + ".png");
+		File chart2File = new File("plots/Output_Chart2_MAX_random_" + randomAssignement + ".png");
 		try {
 			ChartUtilities.saveChartAsPNG(chart1File, chart1, 640, 480);
 			ChartUtilities.saveChartAsPNG(chart2File, chart2, 640, 480);
@@ -165,7 +167,7 @@ public class Experiment2 {
 			
 			vendingMachineExperiment = new Experiment("VendingMachine-Experiment-nQueues");
 			
-			vendingModel = new VendingMachineModelScenario2(null, "VendingMachine-Model", true, true, numOfMachines, lowerBoundCustomerDuration, upperBoundCustomerDuration, arrivalTimeInterval);
+			vendingModel = new VendingMachineModelScenario2(null, "VendingMachine-Model", true, true, numOfMachines, lowerBoundCustomerDuration, upperBoundCustomerDuration, arrivalTimeInterval, randomAssignement);
 			vendingModel.connectToExperiment(vendingMachineExperiment);
 			
 			vendingMachineExperiment.tracePeriod(new TimeInstant(0.0), new TimeInstant(240));
@@ -189,7 +191,7 @@ public class Experiment2 {
 			// scenario 3
 			
 			vendingMachineExperiment = new Experiment("VendingMachine-Experiment-switchingQueue");
-			vendingModel = new VendingMachineModelScenario3(null, "VendingMachine-Model", true, true, numOfMachines, lowerBoundCustomerDuration, upperBoundCustomerDuration, arrivalTimeInterval);
+			vendingModel = new VendingMachineModelScenario3(null, "VendingMachine-Model", true, true, numOfMachines, lowerBoundCustomerDuration, upperBoundCustomerDuration, arrivalTimeInterval, randomAssignement);
 			vendingModel.connectToExperiment(vendingMachineExperiment);
 			
 			vendingMachineExperiment.tracePeriod(new TimeInstant(0.0), new TimeInstant(240));

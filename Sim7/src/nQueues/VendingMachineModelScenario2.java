@@ -45,13 +45,17 @@ public class VendingMachineModelScenario2 extends Model{
 	protected double upperBoundCustomerDuration;
 	protected double arrivalTimeInterval;
 	
+	// value of random assignement
+	protected boolean randomAssignement;
+	
 
-	public VendingMachineModelScenario2(Model owner, String name, boolean showInReport, boolean showInTrace, int numOfMachines, double lowerBoundCustomerDuration, double upperBoundCustomerDuration, double arrivalTimeInterval) {
+	public VendingMachineModelScenario2(Model owner, String name, boolean showInReport, boolean showInTrace, int numOfMachines, double lowerBoundCustomerDuration, double upperBoundCustomerDuration, double arrivalTimeInterval, boolean randomAssignement) {
 		super(owner, name, showInReport, showInTrace);
 		this.numOfMachines = numOfMachines;
 		this.lowerBoundCustomerDuration = lowerBoundCustomerDuration;
 		this.upperBoundCustomerDuration = upperBoundCustomerDuration;
 		this.arrivalTimeInterval = arrivalTimeInterval;
+		this.randomAssignement = randomAssignement;
 	}
 
 	@Override
@@ -76,8 +80,10 @@ public class VendingMachineModelScenario2 extends Model{
 		
 		Random r = new Random();
 		
-		queue = new ContDistUniform(this, "Queue", 0.0, numOfMachines, true, true);
-		queue.reset(Math.abs(r.nextLong()));
+		if(randomAssignement) {
+			queue = new ContDistUniform(this, "Queue", 0.0, numOfMachines, true, true);
+			queue.reset(Math.abs(r.nextLong()));
+		}
 		
 		vendingMachines = new ArrayList<VendingMachine>();
 		
@@ -96,7 +102,7 @@ public class VendingMachineModelScenario2 extends Model{
 		
 		Experiment vendingMachineExperiment = new Experiment("VendingMachine-Experiment-nQueues");
 	
-		VendingMachineModelScenario2 vendingModel = new VendingMachineModelScenario2(null, "VendingMachine-Model", true, true, 2, 0.5, 10.0, 3);
+		VendingMachineModelScenario2 vendingModel = new VendingMachineModelScenario2(null, "VendingMachine-Model", true, true, 2, 0.5, 10.0, 3, true);
 	
 		vendingModel.connectToExperiment(vendingMachineExperiment);
 		
@@ -139,5 +145,9 @@ public class VendingMachineModelScenario2 extends Model{
 	
 	public void setQueueSeed(long seed) {
 		queue.reset(seed);
+	}
+	
+	public boolean getRandomAssignement() {
+		return randomAssignement;
 	}
 }

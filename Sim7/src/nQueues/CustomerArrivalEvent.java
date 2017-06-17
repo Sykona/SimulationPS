@@ -10,7 +10,6 @@ public class CustomerArrivalEvent extends Event<Customer>{
 	
 	private VendingMachineModelScenario2 model;
 	
-	private boolean random = true;
 
 	public CustomerArrivalEvent(Model owner, String name, boolean showInTrace) {
 		super(owner, name, showInTrace);
@@ -24,7 +23,7 @@ public class CustomerArrivalEvent extends Event<Customer>{
 		int numberOfMachines = model.vendingMachines.size();
 		int machine = 0;
 		
-		if(random) {
+		if(model.getRandomAssignement()) {
 			// random machine
 			machine = (int) model.getQueue();
 		}else {

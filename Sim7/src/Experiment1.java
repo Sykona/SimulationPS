@@ -45,6 +45,8 @@ public class Experiment1 {
 	
 	static int numberOfMachines = 2;
 	
+	static boolean randomAssignement = true;
+	
 	public static void main(String[] args){
 
 		doExperiments(numberOfMachines, 0.5, 10.0, 2.8);
@@ -86,7 +88,7 @@ public class Experiment1 {
         renderer.setSeriesItemLabelsVisible(2, true);
 
        
-		File barChart = new File("plots/Output" + numberOfMachines + ".png");
+		File barChart = new File("plots/Output_" + numberOfMachines + "_random_" + randomAssignement + ".png");
 		try {
 			ChartUtilities.saveChartAsPNG(barChart, chart, 640, 480);
 		} catch (IOException e) {
@@ -140,7 +142,7 @@ public class Experiment1 {
 			
 			vendingMachineExperiment = new Experiment("VendingMachine-Experiment-nQueues");
 			
-			vendingModel = new VendingMachineModelScenario2(null, "VendingMachine-Model", true, true, numOfMachines, lowerBoundCustomerDuration, upperBoundCustomerDuration, arrivalTimeInterval);
+			vendingModel = new VendingMachineModelScenario2(null, "VendingMachine-Model", true, true, numOfMachines, lowerBoundCustomerDuration, upperBoundCustomerDuration, arrivalTimeInterval, randomAssignement);
 			vendingModel.connectToExperiment(vendingMachineExperiment);
 			
 			vendingMachineExperiment.tracePeriod(new TimeInstant(0.0), new TimeInstant(240));
@@ -148,10 +150,11 @@ public class Experiment1 {
 			
 			((VendingMachineModelScenario2) vendingModel).setArrivalSeed(arrivalSeed);
 			((VendingMachineModelScenario2) vendingModel).setDurationSeed(durationSeed);
-			if(queueSeed == 0)
-				queueSeed = ((VendingMachineModelScenario2) vendingModel).getQueueSeed();
-			else
-				((VendingMachineModelScenario2) vendingModel).setQueueSeed(queueSeed);
+			if(!randomAssignement)
+				if(queueSeed == 0)
+					queueSeed = ((VendingMachineModelScenario2) vendingModel).getQueueSeed();
+				else
+					((VendingMachineModelScenario2) vendingModel).setQueueSeed(queueSeed);
 			
 			vendingMachineExperiment.stop(new TimeInstant(240));
 			vendingMachineExperiment.start();
@@ -164,7 +167,7 @@ public class Experiment1 {
 			// scenario 3
 			
 			vendingMachineExperiment = new Experiment("VendingMachine-Experiment-switchingQueue");
-			vendingModel = new VendingMachineModelScenario3(null, "VendingMachine-Model", true, true, numOfMachines, lowerBoundCustomerDuration, upperBoundCustomerDuration, arrivalTimeInterval);
+			vendingModel = new VendingMachineModelScenario3(null, "VendingMachine-Model", true, true, numOfMachines, lowerBoundCustomerDuration, upperBoundCustomerDuration, arrivalTimeInterval, randomAssignement);
 			vendingModel.connectToExperiment(vendingMachineExperiment);
 			
 			vendingMachineExperiment.tracePeriod(new TimeInstant(0.0), new TimeInstant(240));
@@ -172,7 +175,8 @@ public class Experiment1 {
 			
 			((VendingMachineModelScenario3) vendingModel).setArrivalSeed(arrivalSeed);
 			((VendingMachineModelScenario3) vendingModel).setDurationSeed(durationSeed);
-			((VendingMachineModelScenario3) vendingModel).setQueueSeed(queueSeed);
+			if(!randomAssignement)
+				((VendingMachineModelScenario3) vendingModel).setQueueSeed(queueSeed);
 			
 			vendingMachineExperiment.stop(new TimeInstant(240));
 			vendingMachineExperiment.start();
